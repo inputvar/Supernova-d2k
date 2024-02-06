@@ -7,6 +7,7 @@ import cv2
 import matplotlib.pyplot as plt
 import glob
 import cv2
+import base64
 
 
 def load_images(directory):
@@ -127,6 +128,11 @@ def run_algorithm(product_image_path ,shelf_image_path,scale_shelf=False,scale_p
     # print(dst[0,0,0],dst[0,0,1],dst[1,0,0],dst[1,0,1])
 
 
+    # Convert the image to base64
+    _, buffer = cv2.imencode('.png', matched_image)
+    matched_image_base64 = base64.b64encode(buffer).decode('utf-8')
+
+
 
     # Assuming img1 is the image on which the quadrilateral is drawn
     total_image_area = img2.shape[0] * img2.shape[1]
@@ -204,9 +210,21 @@ def run_algorithm(product_image_path ,shelf_image_path,scale_shelf=False,scale_p
         lighting_conditions = "Poor lighting conditions"
     else:
         lighting_conditions = "Very poor lighting conditions"
+    
+    if normalized_distance_y < 0.2:
+        incentive_message = "Offer more incentives to the shopkeeper for placing the product along the central shelf (along the customers eye level)"
+        incentive = 0.25
+    elif normalized_distance_y < 0.35 and normalized_distance_y > 0.2:
+        incentive_message = "Offer less incentives to the shopkeeper for placing the product not at the corners of the shelf but also not at the center."
+        incentive = 0.1
+    else:
+        incentive_message = "Don't offer any incentive to the shopkeeper. The product is not placed very well and is along the corners."
+        incentive = 0
+
+    return normalized_distance_y, percentage_area, matched_image_base64, lighting_conditions, incentive_message
+    # print(f"Incentive value = {incentive*100}%")
 
     # plt.imshow(cv2.cvtColor(gray_image, cv2.COLOR_BGR2RGB)),plt.show()
-    return normalized_distance_y, percentage_area, matched_image, lighting_conditions
 
 
 

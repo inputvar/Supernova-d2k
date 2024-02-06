@@ -63,31 +63,55 @@
                     throw new Error('Error analyzing image');
                 }
 
-                const data = await response.json();
-                resultsElement.innerHTML = '';
+                        const data = await response.json();
+                        resultsElement.innerHTML = '';
 
-                const textResults = document.createElement('div');
-                textResults.textContent = data.text_results;
-                resultsElement.appendChild(textResults);
+                        const textResults = document.createElement('div');
+                        textResults.textContent = data.text_results;
+                        resultsElement.appendChild(textResults);
 
-                if (data.processed_image) {
+                        if (data.processed_image) {
+                            const processedImage = document.createElement('img');
+                            processedImage.src = `data:image/png;base64,${data.processed_image}`;
+                            processedImage.classList.add('img-fluid', 'mt-3');
+                            resultsElement.appendChild(processedImage);
+                        }
+
+                        if (data.matched_image) {
+                            const matchedImage = document.createElement('img');
+                            matchedImage.src = `data:image/png;base64,${data.matched_image}`;
+                            matchedImage.classList.add('img-fluid', 'mt-3');
+                            resultsElement.appendChild(matchedImage);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+
+
+                // Update file input label to show selected file name
+                fileInput.addEventListener('change', function(event) {
+                    const fileName = event.target.files[0].name;
+                    const label = document.querySelector('.custom-file-label');
+                    label.textContent = fileName;
+                });
+
+                // Update results object with new values
+                results.normalized_distance_y = '{{ normalized_distance_y }}';
+                results.percentage_area = '{{ percentage_area }}';
+                results.lighting_conditions = '{{ lighting_conditions }}';
+                results.matched_image = '{{ matched_image }}';
+
+                // Generate response image (optional)
+                {% if request.args.get('return_processed_image') %}
                     const processedImage = document.createElement('img');
-                    processedImage.src = `data:image/png;base64,${data.processed_image}`;
+                    processedImage.src = `data:image/png;base64,{{ processed_image }}`;
                     processedImage.classList.add('img-fluid', 'mt-3');
                     resultsElement.appendChild(processedImage);
-                }
-            } catch (error) {
-                console.error(error);
-                alert('An error occurred. Please try again.');
-            }
-        });
-
-        // Update file input label to show selected file name
-        fileInput.addEventListener('change', function(event) {
-            const fileName = event.target.files[0].name;
-            const label = document.querySelector('.custom-file-label');
-            label.textContent = fileName;
-        });
+                {% else %}
+                    results.processed_image = '{{ processed_image }}';
+                {% endif %}
     </script>
 </body>
 </html>

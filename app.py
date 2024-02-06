@@ -109,14 +109,15 @@ def analyze_image():
         product_image_path = PRODUCT_IMAGES[selected_product]
 
         # Perform image analysis (using placeholder function for now)
-        normalized_distance_y, percentage_area, matched_image, lighting_conditions = run_algorithm(product_image_path, image_path)
+        normalized_distance_y, percentage_area, matched_image_base64, lighting_conditions,incentive_message = run_algorithm(product_image_path, image_path)
 
         # Prepare response data
         results = {
             'normalized_distance_y': normalized_distance_y,
             'percentage_area': percentage_area,
             'lighting_conditions': lighting_conditions,
-            'matched_image': matched_image,  # Assuming matched_image holds actual path
+            'matched_image': matched_image_base64,  # Change variable name
+            'incentive_message': incentive_message
         }
 
         # Generate response image (optional)
@@ -127,7 +128,7 @@ def analyze_image():
             processed_image_b64 = base64.b64encode(processed_image_byte_array.getvalue()).decode('utf-8')
             results['processed_image'] = processed_image_b64
         else:
-            results['matched_image'] = matched_image  # Include matched_image in the response
+            results['matched_image'] = matched_image_base64  # Change variable name
 
         response = jsonify(results)
         response.headers['Content-Type'] = 'application/json'
