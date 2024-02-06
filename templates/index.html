@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Analysis</title>
+    <title>Shelf Analyser</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 600px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Upload an image for analysis:</h1>
+        <h1 class="mb-4">Upload an Shelf Image for analysis:</h1>
         <form id="imageForm" enctype="multipart/form-data">
             <div class="input-group mb-3">
                 <div class="custom-file">
@@ -19,6 +24,16 @@
                 <div class="input-group-append">
                     <button type="submit" class="btn btn-primary">Analyze</button>
                 </div>
+            </div>
+            <div class="form-group">
+                <label for="productDropdown">Select your Company's Product:</label>
+                <select class="form-control" id="productDropdown" name="product">
+                    <option value="" selected disabled>Select a product</option>
+                    <option value="Fanta">Fanta</option>
+                    <option value="Rinso">Rinso</option>
+                    <option value="Bingo">Bingo</option>
+                    <option value="Stayfree">Stayfree</option>
+                </select>
             </div>
         </form>
         <div id="results" class="mt-4"></div>
