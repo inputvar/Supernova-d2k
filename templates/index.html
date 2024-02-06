@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Analysis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Upload an image for analysis:</h1>
+        <form id="imageForm" enctype="multipart/form-data">
+            <div class="input-group mb-3">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="imageInput" name="image" accept="image/*" required>
+                    <label class="custom-file-label" for="imageInput">Choose file</label>
+                </div>
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Analyze</button>
+                </div>
+            </div>
+        </form>
+        <div id="results" class="mt-4"></div>
+    </div>
+
+    <!-- Bootstrap JS and jQuery (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        const form = document.getElementById('imageForm');
+        const fileInput = document.getElementById('imageInput');
+        const resultsElement = document.getElementById('results');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error analyzing image');
+                }
+
+                const data = await response.json();
+                resultsElement.innerHTML = '';
+
+                const textResults = document.createElement('div');
+                textResults.textContent = data.text_results;
+                resultsElement.appendChild(textResults);
+
+                if (data.processed_image) {
+                    const processedImage = document.createElement('img');
+                    processedImage.src = `data:image/png;base64,${data.processed_image}`;
+                    processedImage.classList.add('img-fluid', 'mt-3');
+                    resultsElement.appendChild(processedImage);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        // Update file input label to show selected file name
+        fileInput.addEventListener('change', function(event) {
+            const fileName = event.target.files[0].name;
+            const label = document.querySelector('.custom-file-label');
+            label.textContent = fileName;
+        });
+    </script>
+</body>
+</html>
