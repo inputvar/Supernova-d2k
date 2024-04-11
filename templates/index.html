@@ -104,14 +104,17 @@
                 results.matched_image = '{{ matched_image }}';
 
                 // Generate response image (optional)
-                {% if request.args.get('return_processed_image') %}
+                 if (request.args.get('return_processed_image'))
+                {
                     const processedImage = document.createElement('img');
                     processedImage.src = `data:image/png;base64,{{ processed_image }}`;
                     processedImage.classList.add('img-fluid', 'mt-3');
                     resultsElement.appendChild(processedImage);
-                {% else %}
+                }
+                else{
                     results.processed_image = '{{ processed_image }}';
-                {% endif %}
+                }
+                endif
     </script>
 </body>
 </html>

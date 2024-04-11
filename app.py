@@ -81,9 +81,9 @@ def analyze_image():
         # Validate and handle image file
         image_file = request.files['image']
         if not image_file:
-            raise ValueError("No image file uploaded")
+            raise ValueError("No Image file uploaded")
         if not image_file.filename or not '.' in image_file.filename:
-            raise ValueError("Invalid image file format")
+            raise ValueError("Invalid Image file format")
 
         # Ensure RGB format
         image = Image.open(image_file).convert('RGB')
@@ -98,7 +98,7 @@ def analyze_image():
         PRODUCT_IMAGES = {
             'Fanta': 'data_/products/c1_product.jpg',
             'Rinso': 'data_/products/t1_product.jpg',
-            'Bingo': 'data_/products/b1_product.jpg',
+            'Bingo Chips': 'data_/products/b1_product.jpg',
             'Stayfree': 'data_/products/test_product3.jpg'
         }
 
